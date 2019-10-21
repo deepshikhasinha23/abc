@@ -17,6 +17,14 @@ class Cell {
         return isHeader;
     }
 
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "cellData='" + cellData + '\'' +
+                ", isHeader=" + isHeader +
+                '}';
+    }
+
     public String getCellData() {
         return cellData;
     }

@@ -12,6 +12,7 @@ public class Table {
     private int columnWidth;
     private StringBuilder generatedTable;
     private LayoutManager layoutManager;
+    private int numberOfRowsWithData;
 
     public Table(int row, int column) {
         if (row <= 0 || column <= 0)
@@ -19,6 +20,7 @@ public class Table {
         this.row = row;
         this.column = column;
         this.columnWidth = 10;
+        numberOfRowsWithData=0;
         this.layoutManager = new LayoutManager();
         tableData = new ArrayList<>();
         generatedTable = new StringBuilder();
@@ -93,6 +95,23 @@ public class Table {
             header.add( new Cell( s, true ) );
         }
         tableData.add( 0, header );
+        numberOfRowsWithData++;
+        return create();
+    }
+
+    public String addDataInRow(String... rowData) {
+        if (rowData.length != this.column)
+            throw new IllegalArgumentException("Number of data in a row should be equal to number of columns." );
+
+        if (numberOfRowsWithData==this.row){
+            throw new IllegalStateException("Table is full,create  another row" );
+        }
+        List<Cell> row = new ArrayList<>();
+        for (String s : rowData) {
+            row.add( new Cell( s, false ) );
+        }
+        tableData.add( numberOfRowsWithData,row );
+        numberOfRowsWithData++;
         return create();
     }
 }
