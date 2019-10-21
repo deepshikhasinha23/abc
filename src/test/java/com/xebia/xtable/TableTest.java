@@ -51,7 +51,27 @@ public class TableTest {
         Table table = new Table( 1, 2 );
         table.addNumberOfRows( 3 );
         expectedException.expect( IllegalArgumentException.class );
-        expectedException.expectMessage( "Argument should be lesser than current number of columns" );
+        expectedException.expectMessage( "The input can't be equal or greater than current column count.");
         table.reduceNumberOfColumns( 3 );
+    }
+
+    @Test
+    public void should_be_able_to_create_a_table_with_headers(){
+        Table table=new Table( 2,2 );
+        String s = table.addHeader( "header1", "header2" );
+        String tableWithHeaders="+----------+----------+\n"+
+                                "|header1   |header2   |\n"+
+                                "+----------+----------+\n"+
+                                "|          |          |\n"+
+                                "+----------+----------+\n";
+        assertThat( s ).isEqualTo( tableWithHeaders );
+    }
+
+    @Test
+    public void should_be_able_to_throw_exception_when_number_of_headers_is_not_equal_to_number_of_columns(){
+        Table table=new Table( 2,2 );
+        expectedException.expect( IllegalArgumentException.class );
+        expectedException.expectMessage( "Number of headers should be equal to number of columns." );
+        table.addHeader( "header1", "header2","headers3" );
     }
 }
