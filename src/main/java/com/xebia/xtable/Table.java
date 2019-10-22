@@ -5,10 +5,13 @@ import com.xebia.xtable.renderer.TableRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.xebia.xtable.Constants.EMPTY_DATA;
+import static com.xebia.xtable.Constants.START_POSITION;
+
 public class Table {
     private int row;
     private int column;
-    private List<List<Cell>> tableData;
+    private List<List<Cell>> rowsData;
     private int columnWidth;
     private StringBuilder generatedTable;
     private LayoutManager layoutManager;
@@ -20,22 +23,22 @@ public class Table {
         this.row = row;
         this.column = column;
         this.columnWidth = 10;
-        numberOfRowsWithData=0;
+        numberOfRowsWithData = 0;
         this.layoutManager = new LayoutManager();
-        tableData = new ArrayList<>();
+        rowsData = new ArrayList<>();
         generatedTable = new StringBuilder();
-        fillData();
+        fillTableWithEmptyData();
     }
 
     public String create() {
         generatedTable.setLength( 0 );
-        layoutManager.createColumnHorizontalLine( this.columnWidth );
+        layoutManager.createHorizontalCellLine( this.columnWidth );
         for (int i = 0; i < row; i++) {
             layoutManager.insertRowLine( generatedTable, column );
             for (int j = 0; j < column; j++) {
-                layoutManager.insertCell( generatedTable, tableData.get( i ).get( j ) );
+                layoutManager.insertCell( generatedTable, rowsData.get( i ).get( j ) );
             }
-            layoutManager.endCell( generatedTable );
+            layoutManager.closeCell( generatedTable );
         }
         layoutManager.insertRowLine( generatedTable, column );
         return generatedTable.toString();
@@ -56,7 +59,7 @@ public class Table {
             for (int j = 0; j < column; j++) {
                 rowData.add( new Cell( "" ) );
             }
-            tableData.add( rowData );
+            rowsData.add( rowData );
         }
     }
 
@@ -87,7 +90,7 @@ public class Table {
     }
 
 
-    public String addHeader(String... headers) {
+    public void  addHeader(String... headers) {
         if (headers.length != this.column)
             throw new IllegalArgumentException( "Number of headers should be equal to number of columns." );
         List<Cell> header = new ArrayList<>();
@@ -96,22 +99,20 @@ public class Table {
         }
         tableData.add( 0, header );
         numberOfRowsWithData++;
-        return create();
     }
 
-    public String addDataInRow(String... rowData) {
+    public void  addDataInRow(String... rowData) {
         if (rowData.length != this.column)
-            throw new IllegalArgumentException("Number of data in a row should be equal to number of columns." );
+            throw new IllegalArgumentException( "Number of data in a row should be equal to number of columns." );
 
-        if (numberOfRowsWithData==this.row){
-            throw new IllegalStateException("Table is full,create  another row" );
+        if (numberOfRowsWithData == this.row) {
+            throw new IllegalStateException( "Table is full,create  another row" );
         }
         List<Cell> row = new ArrayList<>();
         for (String s : rowData) {
-            row.add( new Cell( s, false ) );
+            row.add( Cell.dataRow(s) );
         }
-        tableData.add( numberOfRowsWithData,row );
+        rowsData.add( numberOfRowsWithData, row );
         numberOfRowsWithData++;
-        return create();
     }
 }

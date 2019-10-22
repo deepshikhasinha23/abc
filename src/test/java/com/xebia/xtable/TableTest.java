@@ -58,7 +58,8 @@ public class TableTest {
     @Test
     public void should_be_able_to_create_a_table_with_headers(){
         Table table=new Table( 2,2 );
-        String s = table.addHeader( "header1", "header2" );
+        table.addHeader( "header1", "header2" );
+        String s = table.create();
         String tableWithHeaders="+----------+----------+\n"+
                                 "|header1   |header2   |\n"+
                                 "+----------+----------+\n"+
@@ -79,30 +80,17 @@ public class TableTest {
     public void should_be_able_to_add_rows_with_data(){
         Table table=new Table( 3,2 );
         table.addHeader( "header1", "header2" );
-        String s1 = table.addDataInRow( "data1", "data2" );
-        String tableWithData="+----------+----------+\n"+
-                             "|header1   |header2   |\n"+
-                             "+----------+----------+\n"+
-                             "|data1     |data2     |\n"+
-                             "+----------+----------+\n"+
-                             "|          |          |\n" +
-                             "+----------+----------+\n";
-        assertThat( s1 ).isEqualTo( tableWithData );
-    }
-
-    @Test
-    public void should_be_able_to_add_header_after_rows_with_data(){
-        Table table=new Table( 3,2 );
         table.addDataInRow( "data1", "data2" );
-        String s=table.addHeader( "header1", "header2" );
-        String tableWithData="+----------+----------+\n"+
-                             "|header1   |header2   |\n"+
-                             "+----------+----------+\n"+
-                             "|data1     |data2     |\n"+
-                             "+----------+----------+\n"+
-                             "|          |          |\n" +
-                             "+----------+----------+\n";
-        assertThat( s ).isEqualTo( tableWithData );
+        String s = table.create();
+        String tableWithData=
+                "+----------+----------+\n"+
+                "|header1   |header2   |\n"+
+                "+----------+----------+\n"+
+                "|data1     |data2     |\n"+
+                "+----------+----------+\n"+
+                "|          |          |\n" +
+                "+----------+----------+\n";
+        assertThat( s).isEqualTo( tableWithData );
     }
 
     @Test

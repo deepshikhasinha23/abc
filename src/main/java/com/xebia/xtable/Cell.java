@@ -1,31 +1,27 @@
 package com.xebia.xtable;
 
 class Cell {
-    private String cellData;
+    private String data;
     private boolean isHeader;
 
-    public Cell(String cellData) {
-        this( cellData, false );
+    Cell(String data) {
+        this( data, false );
     }
 
-    public Cell(String cellData, boolean isHeader) {
-        this.cellData = cellData;
+    Cell(String data, boolean isHeader) {
+        this.data = data;
         this.isHeader = isHeader;
+    }
+
+    static Cell dataRow(String s) {
+        return new Cell(  s,false);
     }
 
     public boolean isHeader() {
         return isHeader;
     }
 
-    @Override
-    public String toString() {
-        return "Cell{" +
-                "cellData='" + cellData + '\'' +
-                ", isHeader=" + isHeader +
-                '}';
-    }
-
-    public String getCellData() {
-        return cellData;
+    String getData() {
+        return data;
     }
 }
