@@ -2,14 +2,13 @@ package com.xebia.xtable;
 
 import java.util.Collections;
 
+import static com.xebia.xtable.Constants.*;
+
 class LayoutManager {
-    private final String verticalSeparator = "|";
-    private final String connector = "+";
     private String rowLine = "";
 
-    String createColumnHorizontalLine(int width) {
-        String horizontalLine = "-";
-        rowLine = connector + String.join( "", Collections.nCopies( width, horizontalLine ) );
+    String createHorizontalCellLine(int width) {
+        rowLine = CONNECTOR + String.join( "", Collections.nCopies( width, HORIZONTAL_LINE_BUILDER ) );
         return rowLine;
     }
 
@@ -17,25 +16,25 @@ class LayoutManager {
         for (int j = 0; j < length; j++) {
             builder.append( rowLine );
         }
-        builder.append( connector ).append( "\n" );
+        builder.append( CONNECTOR ).append( "\n" );
         return builder.toString();
     }
 
     String insertCell(StringBuilder builder, Cell cell) {
-        builder.append( verticalSeparator ).append( cell.getCellData() );
-        addPaddingRight( builder, 10 - cell.getCellData().length() );
+        builder.append( VERTICAL_SEPARATOR ).append( cell.getData() );
+        addPaddingRight( builder, 10 - cell.getData().length() );
         return builder.toString();
     }
 
     String addPaddingRight(StringBuilder builder, int i) {
         for (int j = 0; j < i; j++) {
-            builder.append( " " );
+            builder.append( SINGLE_SPACE );
         }
         return builder.toString();
     }
 
-    String endCell(StringBuilder builder) {
-        builder.append( verticalSeparator ).append( "\n" );
+    String closeCell(StringBuilder builder) {
+        builder.append( VERTICAL_SEPARATOR ).append( "\n" );
         return builder.toString();
     }
 }

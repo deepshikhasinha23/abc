@@ -5,10 +5,13 @@ import com.xebia.xtable.renderer.TableRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.xebia.xtable.Constants.EMPTY_DATA;
+import static com.xebia.xtable.Constants.START_POSITION;
+
 public class Table {
     private int row;
     private int column;
-    private List<List<Cell>> tableData;
+    private List<List<Cell>> rowsData;
     private int columnWidth;
     private StringBuilder generatedTable;
     private LayoutManager layoutManager;
@@ -20,20 +23,20 @@ public class Table {
         this.column = column;
         this.columnWidth = 10;
         this.layoutManager = new LayoutManager();
-        tableData = new ArrayList<>();
+        rowsData = new ArrayList<>();
         generatedTable = new StringBuilder();
-        fillData();
+        fillTableWithEmptyData();
     }
 
     public String create() {
         generatedTable.setLength( 0 );
-        layoutManager.createColumnHorizontalLine( this.columnWidth );
+        layoutManager.createHorizontalCellLine( this.columnWidth );
         for (int i = 0; i < row; i++) {
             layoutManager.insertRowLine( generatedTable, column );
             for (int j = 0; j < column; j++) {
-                layoutManager.insertCell( generatedTable, tableData.get( i ).get( j ) );
+                layoutManager.insertCell( generatedTable, rowsData.get( i ).get( j ) );
             }
-            layoutManager.endCell( generatedTable );
+            layoutManager.closeCell( generatedTable );
         }
         layoutManager.insertRowLine( generatedTable, column );
         return generatedTable.toString();
@@ -48,13 +51,13 @@ public class Table {
     }
 
 
-    private void fillData() {
+    private void fillTableWithEmptyData() {
         for (int i = 0; i < row; i++) {
             List<Cell> rowData = new ArrayList<>();
             for (int j = 0; j < column; j++) {
-                rowData.add( new Cell( "" ) );
+                rowData.add( new Cell( EMPTY_DATA ) );
             }
-            tableData.add( rowData );
+            rowsData.add( rowData );
         }
     }
 
@@ -92,7 +95,7 @@ public class Table {
         for (String s : headers) {
             header.add( new Cell( s, true ) );
         }
-        tableData.add( 0, header );
+        rowsData.add( START_POSITION, header );
         return create();
     }
 }
