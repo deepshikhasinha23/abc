@@ -58,7 +58,8 @@ public class TableTest {
     @Test
     public void should_be_able_to_create_a_table_with_headers(){
         Table table=new Table( 2,2 );
-        String s = table.addHeader( "header1", "header2" );
+        table.addHeader( "header1", "header2" );
+        String s = table.create();
         String tableWithHeaders="+----------+----------+\n"+
                                 "|header1   |header2   |\n"+
                                 "+----------+----------+\n"+
@@ -73,5 +74,32 @@ public class TableTest {
         expectedException.expect( IllegalArgumentException.class );
         expectedException.expectMessage( "Number of headers should be equal to number of columns." );
         table.addHeader( "header1", "header2","headers3" );
+    }
+
+    @Test
+    public void should_be_able_to_add_rows_with_data(){
+        Table table=new Table( 3,2 );
+        table.addHeader( "header1", "header2" );
+        table.addDataInRow( "data1", "data2" );
+        String s = table.create();
+        String tableWithData=
+                "+----------+----------+\n"+
+                "|header1   |header2   |\n"+
+                "+----------+----------+\n"+
+                "|data1     |data2     |\n"+
+                "+----------+----------+\n"+
+                "|          |          |\n" +
+                "+----------+----------+\n";
+        assertThat( s).isEqualTo( tableWithData );
+    }
+
+    @Test
+    public void should_be_able_to_throw_exception_when_add_data_in_rows_and_table_is_full(){
+        Table table=new Table( 2,2 );
+        table.addHeader( "header1", "header2" );
+        table.addDataInRow( "data1", "data2" );
+        expectedException.expect( IllegalStateException.class );
+        expectedException.expectMessage( "Table is full,create  another row" );
+        table.addDataInRow( "data1", "data2" );
     }
 }

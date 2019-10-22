@@ -13,6 +13,10 @@ class Cell {
         this.isHeader = isHeader;
     }
 
+    static Cell dataRow(String s) {
+        return new Cell(  s,false);
+    }
+
     public boolean isHeader() {
         return isHeader;
     }
