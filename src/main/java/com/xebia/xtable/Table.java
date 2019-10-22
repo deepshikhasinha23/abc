@@ -53,11 +53,11 @@ public class Table {
     }
 
 
-    private void fillData() {
+    private void fillTableWithEmptyData() {
         for (int i = 0; i < row; i++) {
             List<Cell> rowData = new ArrayList<>();
             for (int j = 0; j < column; j++) {
-                rowData.add( new Cell( "" ) );
+                rowData.add( new Cell( EMPTY_DATA ) );
             }
             rowsData.add( rowData );
         }
@@ -97,7 +97,7 @@ public class Table {
         for (String s : headers) {
             header.add( new Cell( s, true ) );
         }
-        tableData.add( 0, header );
+        rowsData.add( START_POSITION, header );
         numberOfRowsWithData++;
     }
 
