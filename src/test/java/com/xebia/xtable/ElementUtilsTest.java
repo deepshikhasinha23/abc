@@ -23,7 +23,7 @@ public class ElementUtilsTest {
     @Test
     public void should_be_able_to_insert_a_cell() {
         StringBuilder builder = new StringBuilder();
-        String cellData = ElementUtils.insertCell(builder, Cell.createEmpty());
+        String cellData = ElementUtils.insertCell(builder, Cell.createEmpty(10));
         assertThat(cellData).isEqualTo("|          ");
     }
 
@@ -41,6 +41,11 @@ public class ElementUtilsTest {
         String s = ElementUtils.addPaddingRight(builder, 5);
         assertThat(s).isEqualTo("text     ");
     }
-
+    @Test
+    public void should_be_able_to_truncate_data_if_data_exceeds_cell_length() {
+        Cell cell = new Cell("My name is Ram",false,10);
+        String s = ElementUtils.truncateData(cell);
+        assertThat(s).isEqualTo("My name...");
+    }
 
 }
