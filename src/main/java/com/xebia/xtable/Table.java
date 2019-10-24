@@ -3,116 +3,85 @@ package com.xebia.xtable;
 import com.xebia.xtable.renderer.TableRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static com.xebia.xtable.Constants.EMPTY_DATA;
 import static com.xebia.xtable.Constants.START_POSITION;
 
 public class Table {
-    private int row;
-    private int column;
+    private Configuration configuration;
     private List<List<Cell>> rowsData;
-    private int columnWidth;
-    private StringBuilder generatedTable;
-    private LayoutManager layoutManager;
+    private String generatedTable;
     private int numberOfRowsWithData;
+    private TableLayout tableLayout;
 
-    public Table(int row, int column) {
-        if (row <= 0 || column <= 0)
-            throw new IllegalArgumentException( "Invalid number of rows or columns" );
-        this.row = row;
-        this.column = column;
-        this.columnWidth = 10;
+    public Table(Configuration configuration) {
         numberOfRowsWithData = 0;
-        this.layoutManager = new LayoutManager();
         rowsData = new ArrayList<>();
-        generatedTable = new StringBuilder();
+        generatedTable = "";
+        this.configuration=configuration;
+        tableLayout = new HorizontalTableLayout();
         fillTableWithEmptyData();
     }
 
     public String create() {
-        generatedTable.setLength( 0 );
-        layoutManager.createHorizontalCellLine( this.columnWidth );
-        for (int i = 0; i < row; i++) {
-            layoutManager.insertRowLine( generatedTable, column );
-            for (int j = 0; j < column; j++) {
-                layoutManager.insertCell( generatedTable, rowsData.get( i ).get( j ) );
-            }
-            layoutManager.closeCell( generatedTable );
+        return create(LayoutOptions.HORIZONTAL);
+    }
+
+    public String create(LayoutOptions layoutOption) {
+        if (layoutOption == LayoutOptions.HORIZONTAL) {
+            tableLayout = new HorizontalTableLayout();
+        } else {
+            tableLayout = new VerticalTableLayout();
         }
-        layoutManager.insertRowLine( generatedTable, column );
-        return generatedTable.toString();
+        generatedTable = tableLayout.create(configuration, rowsData);
+        return generatedTable;
     }
 
     public void render() {
-        render( TableRenderer.getConsoleBasedRenderer() );
+        render(TableRenderer.getConsoleBasedRenderer());
     }
 
     public void render(TableRenderer tableRenderer) {
-        tableRenderer.render( generatedTable.toString() );
+        tableRenderer.render(generatedTable);
     }
 
 
     private void fillTableWithEmptyData() {
-        for (int i = 0; i < row; i++) {
-            List<Cell> rowData = new ArrayList<>();
-            for (int j = 0; j < column; j++) {
-                rowData.add( new Cell( EMPTY_DATA ) );
-            }
-            rowsData.add( rowData );
+        for (int i = 0; i < configuration.getRow(); i++) {
+            List<Cell> rowData = Collections.nCopies(configuration.getColumn(), Cell.createEmpty());
+            rowsData.add(rowData);
         }
-    }
-
-    public void addNumberOfRows(int row) {
-        this.row += row;
-    }
-
-    public void addNumberOfColumns(int column) {
-        this.column += column;
-    }
-
-    public void reduceNumberOfRows(int row) {
-        if (row >= this.row) {
-            throw new IllegalArgumentException( "The input can't be equal or greater than current row count." );
-        }
-        this.row -= row;
-    }
-
-    public void reduceNumberOfColumns(int column) {
-        if (column >= this.column) {
-            throw new IllegalArgumentException( "The input can't be equal or greater than current column count." );
-        }
-        this.column -= column;
     }
 
     public String shape() {
-        return String.join( "", "(" + row + "*" + column + ")" );
+        return String.join("", "(" + configuration.getRow() + "*" + configuration.getColumn() + ")");
     }
 
 
-    public void  addHeader(String... headers) {
-        if (headers.length != this.column)
-            throw new IllegalArgumentException( "Number of headers should be equal to number of columns." );
+    public void addHeader(String... headers) {
+        if (headers.length != this.configuration.getColumn())
+            throw new IllegalArgumentException("Number of headers should be equal to number of columns.");
         List<Cell> header = new ArrayList<>();
         for (String s : headers) {
-            header.add( new Cell( s, true ) );
+            header.add(new Cell(s, true));
         }
-        rowsData.add( START_POSITION, header );
+        rowsData.add(START_POSITION, header);
         numberOfRowsWithData++;
     }
 
-    public void  addDataInRow(String... rowData) {
-        if (rowData.length != this.column)
-            throw new IllegalArgumentException( "Number of data in a row should be equal to number of columns." );
+    public void addDataInRow(String... rowData) {
+        if (rowData.length != this.configuration.getColumn())
+            throw new IllegalArgumentException("Number of data in a row should be equal to number of columns.");
 
-        if (numberOfRowsWithData == this.row) {
-            throw new IllegalStateException( "Table is full,create  another row" );
+        if (numberOfRowsWithData == this.configuration.getRow()) {
+            throw new IllegalStateException("Table is full");
         }
         List<Cell> row = new ArrayList<>();
         for (String s : rowData) {
-            row.add( Cell.dataRow(s) );
+            row.add(Cell.createWithData(s));
         }
-        rowsData.add( numberOfRowsWithData, row );
+        rowsData.add(numberOfRowsWithData, row);
         numberOfRowsWithData++;
     }
 }
