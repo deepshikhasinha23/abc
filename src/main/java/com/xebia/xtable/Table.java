@@ -49,7 +49,7 @@ public class Table {
 
     private void fillTableWithEmptyData() {
         for (int i = 0; i < configuration.getRow(); i++) {
-            List<Cell> rowData = Collections.nCopies(configuration.getColumn(), Cell.createEmpty());
+            List<Cell> rowData = Collections.nCopies(configuration.getColumn(), Cell.createEmpty(configuration.getColumnWidth()));
             rowsData.add(rowData);
         }
     }
@@ -64,7 +64,7 @@ public class Table {
             throw new IllegalArgumentException("Number of headers should be equal to number of columns.");
         List<Cell> header = new ArrayList<>();
         for (String s : headers) {
-            header.add(new Cell(s, true));
+            header.add(new Cell(s, true, configuration.getColumnWidth()));
         }
         rowsData.add(START_POSITION, header);
         numberOfRowsWithData++;
@@ -79,7 +79,7 @@ public class Table {
         }
         List<Cell> row = new ArrayList<>();
         for (String s : rowData) {
-            row.add(Cell.createWithData(s));
+            row.add(Cell.createWithData(s, configuration.getColumnWidth()));
         }
         rowsData.add(numberOfRowsWithData, row);
         numberOfRowsWithData++;

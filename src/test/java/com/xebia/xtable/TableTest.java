@@ -101,4 +101,44 @@ public class TableTest {
                 "+----------+----------+----------+\n";
         assertThat( s).isEqualTo( tableWithData );
     }
+    @Test
+    public void should_be_able_to_create_an_empty_table_of_M_rows_N_columns_with_specific_width() {
+        Table table = new Table( new Configuration.Builder().withRow(1).withColumn(2).withColumnWidth(20).build() );
+        String tableStructure =
+                        "+--------------------+--------------------+\n" +
+                        "|                    |                    |\n" +
+                        "+--------------------+--------------------+\n";
+        String createdTable = table.create();
+        assertThat( tableStructure ).isEqualTo( createdTable );
+    }
+    @Test
+    public void should_be_able_to_create_a_table_of_M_rows_N_columns_with_specific_width_containing_headers_and_data() {
+        Table table = new Table( new Configuration.Builder().withRow(2).withColumn(2).withColumnWidth(20).build() );
+        table.addHeader( "header1", "header2" );
+        table.addDataInRow( "data1", "data2" );
+        String tableStructure =
+                                 "+--------------------+--------------------+\n" +
+                                 "|header1             |header2             |\n" +
+                                 "+--------------------+--------------------+\n" +
+                                 "|data1               |data2               |\n" +
+                                 "+--------------------+--------------------+\n";
+        String createdTable = table.create();
+        assertThat( tableStructure ).isEqualTo( createdTable );
+    }
+    @Test
+    public void should_be_able_to_create_a_vertical_table_with_specific_width(){
+        Table table=new Table(new Configuration.Builder().withRow(3).withColumn(2).withColumnWidth(15).build());
+        table.addHeader("header1","header2");
+        table.addDataInRow( "data1", "data2" );
+        table.addDataInRow( "data1", "data2" );
+        String s=table.create(LayoutOptions.VERTICAL);
+        String tableWithData=
+                        "+---------------+---------------+---------------+\n"+
+                        "|header1        |data1          |data1          |\n"+
+                        "+---------------+---------------+---------------+\n"+
+                        "|header2        |data2          |data2          |\n"+
+                        "+---------------+---------------+---------------+\n";
+        assertThat( s).isEqualTo( tableWithData );
+    }
+
 }
