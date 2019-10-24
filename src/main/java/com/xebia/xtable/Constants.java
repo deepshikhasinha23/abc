@@ -7,4 +7,5 @@ public final class Constants {
     public static final String VERTICAL_SEPARATOR = "|";
     public static final String CONNECTOR = "+";
     public static final String HORIZONTAL_LINE_BUILDER = "-";
+    public static final int DEFAULT_COLUMN_WIDTH=10;
 }
