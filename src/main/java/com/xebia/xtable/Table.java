@@ -3,7 +3,6 @@ package com.xebia.xtable;
 import com.xebia.xtable.renderer.TableRenderer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.xebia.xtable.Constants.START_POSITION;
@@ -19,13 +18,17 @@ public class Table {
         numberOfRowsWithData = 0;
         rowsData = new ArrayList<>();
         generatedTable = "";
-        this.configuration=configuration;
+        this.configuration = configuration;
         tableLayout = new HorizontalTableLayout();
         fillTableWithEmptyData();
     }
 
+    public static Table getEmptyTable(int row, int column) {
+        return new Table( new Configuration.Builder().withRow( row ).withColumn( column ).build() );
+    }
+
     public String create() {
-        return create(LayoutOptions.HORIZONTAL);
+        return create( LayoutOptions.HORIZONTAL );
     }
 
     public String create(LayoutOptions layoutOption) {
@@ -34,54 +37,60 @@ public class Table {
         } else {
             tableLayout = new VerticalTableLayout();
         }
-        generatedTable = tableLayout.create(configuration, rowsData);
+        generatedTable = tableLayout.create( configuration, rowsData );
         return generatedTable;
     }
 
     public void render() {
-        render(TableRenderer.getConsoleBasedRenderer());
+        render( TableRenderer.getConsoleBasedRenderer() );
     }
 
     public void render(TableRenderer tableRenderer) {
-        tableRenderer.render(generatedTable);
+        tableRenderer.render( generatedTable );
     }
 
 
     private void fillTableWithEmptyData() {
         for (int i = 0; i < configuration.getRow(); i++) {
-            List<Cell> rowData = Collections.nCopies(configuration.getColumn(), Cell.createEmpty(configuration.getColumnWidth()));
-            rowsData.add(rowData);
+            List<Cell> rowData = new ArrayList<>();
+            for (int j = 0; j < configuration.getColumn(); j++) {
+                rowData.add( Cell.createEmpty( configuration.getColumnWidths().get( j ) ) );
+            }
+            rowsData.add( rowData );
         }
     }
 
     public String shape() {
-        return String.join("", "(" + configuration.getRow() + "*" + configuration.getColumn() + ")");
+        return String.join( "", "(" + configuration.getRow() + "*" + configuration.getColumn() + ")" );
     }
 
 
     public void addHeader(String... headers) {
         if (headers.length != this.configuration.getColumn())
-            throw new IllegalArgumentException("Number of headers should be equal to number of columns.");
+            throw new IllegalArgumentException( "Number of headers should be equal to number of columns." );
+
         List<Cell> header = new ArrayList<>();
-        for (String s : headers) {
-            header.add(new Cell(s, true, configuration.getColumnWidth()));
+        for (int i = 0; i < configuration.getColumn(); i++) {
+            header.add( Cell.createWithData( headers[i], configuration.getColumnWidths().get( i ),true) );
         }
-        rowsData.add(START_POSITION, header);
+        rowsData.add( START_POSITION, header );
         numberOfRowsWithData++;
     }
 
-    public void addDataInRow(String... rowData) {
+    public Table addDataInRow(String... rowData) {
         if (rowData.length != this.configuration.getColumn())
-            throw new IllegalArgumentException("Number of data in a row should be equal to number of columns.");
+            throw new IllegalArgumentException( "Number of data in a row should be equal to number of columns." );
 
         if (numberOfRowsWithData == this.configuration.getRow()) {
-            throw new IllegalStateException("Table is full");
+            throw new IllegalStateException( "Table is full" );
         }
+        
         List<Cell> row = new ArrayList<>();
-        for (String s : rowData) {
-            row.add(Cell.createWithData(s, configuration.getColumnWidth()));
+        for (int i = 0; i < configuration.getColumn(); i++) {
+            row.add( Cell.createWithData( rowData[i], configuration.getColumnWidths().get( i ), false) );
         }
-        rowsData.add(numberOfRowsWithData, row);
+        rowsData.add( numberOfRowsWithData, row );
         numberOfRowsWithData++;
+        return this;
     }
 }
