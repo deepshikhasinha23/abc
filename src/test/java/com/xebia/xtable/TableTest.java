@@ -182,7 +182,7 @@ public class TableTest {
     @Test
     public void should_be_able_to_throw_exception_when_given_number_of_widths_are_not_equal_to_0_1_or_to_number_of_column() {
         expectedException.expect( IllegalArgumentException.class );
-        expectedException.expectMessage( "Number of column widths should be either 1 or equal to number of columns." );
+        expectedException.expectMessage( "Number of column width should be 1 or equal to number of columns" );
         new Table( new Configuration.Builder().withRow( 3 ).withColumn( 5 ).withColumnWidths( 15, 12, 13 ).build() );
 
     }

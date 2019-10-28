@@ -8,15 +8,17 @@ class Cell {
     private boolean isHeader;
 
     static Cell createEmpty(int width) {
-        return new Cell(EMPTY_DATA,  width,false);
+        return new Cell(EMPTY_DATA, width, false);
     }
+
     static Cell createWithData(String s, int width, boolean isHeader) {
-        return new Cell(s,  width, isHeader);
+        return new Cell(s, width, isHeader);
     }
+
     Cell(String data, int width, boolean isHeader) {
         this.data = data;
         this.width = width;
-        this.isHeader=isHeader;
+        this.isHeader = isHeader;
     }
 
     String getData() {
@@ -28,7 +30,7 @@ class Cell {
     }
 
     void setWidth(Integer width) {
-        this.width=width;
+        this.width = width;
     }
 
     public boolean isHeader() {

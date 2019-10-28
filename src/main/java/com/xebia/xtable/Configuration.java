@@ -14,13 +14,15 @@ public class Configuration {
 
     private Configuration(Builder builder) {
         if (builder.row <= 0 || builder.column <= 0) {
-            throw new IllegalArgumentException( "Invalid number of rows or columns");
+            throw new IllegalArgumentException("Invalid number of rows or columns");
         }
 
         if (builder.columnWidths != null) {
             int size = builder.columnWidths.size();
-            if (size > 1 && size != builder.column)
-                throw new IllegalArgumentException( "Number of column widths should be either 1 or equal to number of columns. " );
+            if (size > 1 && size != builder.column) {
+                String message = "Number of column width should be 1 or equal to number of columns";
+                throw new IllegalArgumentException(message);
+            }
         }
 
         row = builder.row;
@@ -28,9 +30,9 @@ public class Configuration {
         columnWidths = new ArrayList<>();
 
         if (builder.columnWidths == null) {
-            columnWidths.addAll( insertColumnWidths( DEFAULT_COLUMN_WIDTH ) );
+            columnWidths.addAll(insertColumnWidths(DEFAULT_COLUMN_WIDTH));
         } else if (builder.columnWidths.size() == 1) {
-            columnWidths.addAll( insertColumnWidths( builder.columnWidths.get( 0 ) ) );
+            columnWidths.addAll(insertColumnWidths(builder.columnWidths.get(0)));
         } else {
             columnWidths = builder.columnWidths;
         }
@@ -39,8 +41,8 @@ public class Configuration {
 
     private List<Integer> insertColumnWidths(int val) {
         Integer[] widths = new Integer[this.column];
-        Arrays.fill( widths, val );
-        return Arrays.asList( widths );
+        Arrays.fill(widths, val);
+        return Arrays.asList(widths);
     }
 
     public int getRow() {
@@ -74,12 +76,12 @@ public class Configuration {
         }
 
         public Builder withColumnWidths(Integer... vals) {
-            columnWidths = new ArrayList<>( Arrays.asList( vals ) );
+            columnWidths = new ArrayList<>(Arrays.asList(vals));
             return this;
         }
 
         public Configuration build() {
-            return new Configuration( this );
+            return new Configuration(this);
         }
     }
 }
