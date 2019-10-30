@@ -4,32 +4,36 @@ import static com.xebia.xtable.Constants.EMPTY_DATA;
 
 class Cell {
     private String data;
-    private boolean isHeader;
     private int width;
-
-    Cell(String data, boolean isHeader, int width) {
-        this.data = data;
-        this.isHeader = isHeader;
-        this.width = width;
-    }
-
-    static Cell createWithData(String s, int width) {
-        return new Cell(s, false, width);
-    }
+    private boolean isHeader;
 
     static Cell createEmpty(int width) {
-        return new Cell(EMPTY_DATA, false, width);
+        return new Cell(EMPTY_DATA, width, false);
     }
 
-    public boolean isHeader() {
-        return isHeader;
+    static Cell createWithData(String s, int width, boolean isHeader) {
+        return new Cell(s, width, isHeader);
+    }
+
+    Cell(String data, int width, boolean isHeader) {
+        this.data = data;
+        this.width = width;
+        this.isHeader = isHeader;
     }
 
     String getData() {
         return data;
     }
 
-    public int getWidth() {
+    int getWidth() {
         return width;
+    }
+
+    void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public boolean isHeader() {
+        return isHeader;
     }
 }
