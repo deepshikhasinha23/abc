@@ -6,3 +6,6 @@ jobs:
     steps:
       - checkout
       - run: ./mvnw clean install
+      
+      #Codecov integration
+      - run: bash <(curl -s https://codecov.io/bash)
