@@ -16,7 +16,12 @@ class Cell {
     }
 
     Cell(String data, int width, boolean isHeader) {
-        this.data = data;
+        if (isHeader) {
+            this.data = data.toUpperCase();
+        } else {
+            this.data = data;
+        }
+
         this.width = width;
         this.isHeader = isHeader;
     }

@@ -13,9 +13,9 @@ public class TableTest {
 
     @Test
     public void should_be_able_to_initialize_a_table_with_M_rows_N_columns() {
-        Table table = new Table( new Configuration.Builder().withRow( 5 ).withColumn( 2 ).build() );
+        Table table = new Table(new Configuration.Builder().withRow(5).withColumn(2).build() );
         String shape = table.shape();
-        assertThat( shape ).isEqualTo( "(5*2)" );
+        assertThat(shape).isEqualTo("(5*2)");
 
     }
 
@@ -44,7 +44,7 @@ public class TableTest {
         String s = table.create();
         String tableWithHeaders =
                 "+----------+----------+\n" +
-                "|header1   |header2   |\n" +
+                "|HEADER1   |HEADER2   |\n" +
                 "+----------+----------+\n" +
                 "|          |          |\n" +
                 "+----------+----------+\n";
@@ -68,7 +68,7 @@ public class TableTest {
         String s = table.create();
         String tableWithData =
                         "+----------+----------+\n" +
-                        "|header1   |header2   |\n" +
+                        "|HEADER1   |HEADER2   |\n" +
                         "+----------+----------+\n" +
                         "|data1     |data2     |\n" +
                         "+----------+----------+\n" +
@@ -96,9 +96,9 @@ public class TableTest {
         String s = table.create( LayoutOptions.VERTICAL );
         String tableWithData =
                         "+----------+----------+----------+\n" +
-                        "|header1   |data1     |data1     |\n" +
+                        "|HEADER1   |data1     |data1     |\n" +
                         "+----------+----------+----------+\n" +
-                        "|header2   |data2     |data2     |\n" +
+                        "|HEADER2   |data2     |data2     |\n" +
                         "+----------+----------+----------+\n";
         assertThat( s ).isEqualTo( tableWithData );
     }
@@ -121,7 +121,7 @@ public class TableTest {
         table.addDataInRow( "data1", "data2" );
         String tableStructure =
                         "+--------------------+--------------------+\n" +
-                        "|header1             |header2             |\n" +
+                        "|HEADER1             |HEADER2             |\n" +
                         "+--------------------+--------------------+\n" +
                         "|data1               |data2               |\n" +
                         "+--------------------+--------------------+\n";
@@ -138,9 +138,9 @@ public class TableTest {
         String s = table.create( LayoutOptions.VERTICAL );
         String tableWithData =
                         "+---------------+---------------+---------------+\n" +
-                        "|header1        |data1          |data1          |\n" +
+                        "|HEADER1        |data1          |data1          |\n" +
                         "+---------------+---------------+---------------+\n" +
-                        "|header2        |data2          |data2          |\n" +
+                        "|HEADER2        |data2          |data2          |\n" +
                         "+---------------+---------------+---------------+\n";
         assertThat( s ).isEqualTo( tableWithData );
     }
@@ -154,7 +154,7 @@ public class TableTest {
         String s = table.create();
         String tableWithData =
                         "+---------------+------------+\n" +
-                        "|header1        |header2     |\n" +
+                        "|HEADER1        |HEADER2     |\n" +
                         "+---------------+------------+\n" +
                         "|data1          |data2       |\n" +
                         "+---------------+------------+\n" +
@@ -172,9 +172,9 @@ public class TableTest {
         String s = table.create( LayoutOptions.VERTICAL );
         String tableWithData =
                         "+---------------+---------------+---------------+\n" +
-                        "|header1        |data1          |data1          |\n" +
+                        "|HEADER1        |data1          |data1          |\n" +
                         "+---------------+---------------+---------------+\n" +
-                        "|header2        |data2          |data2          |\n" +
+                        "|HEADER2        |data2          |data2          |\n" +
                         "+---------------+---------------+---------------+\n";
         assertThat( s ).isEqualTo( tableWithData );
     }
@@ -185,6 +185,15 @@ public class TableTest {
         expectedException.expectMessage( "Number of column width should be 1 or equal to number of columns" );
         new Table( new Configuration.Builder().withRow( 3 ).withColumn( 5 ).withColumnWidths( 15, 12, 13 ).build() );
 
+    }
+
+    @Test
+    public void should_be_able_to_throw_exception_when_number_of_input_data_is_not_equal_to_number_of_columns() {
+        Table table = new Table( new Configuration.Builder().withRow( 3 ).withColumn( 2 ).withColumnWidths( 15, 12 ).build() );
+        table.addHeader( "header1", "header2" );
+        expectedException.expect( IllegalArgumentException.class );
+        expectedException.expectMessage( "Number of data in a row should be equal to number of columns" );
+        table.addDataInRow( "data1", "data2", "data3" );
     }
 
 }

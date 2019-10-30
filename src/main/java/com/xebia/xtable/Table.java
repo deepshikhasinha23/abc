@@ -84,7 +84,7 @@ public class Table {
 
     public Table addDataInRow(String... rowData) {
         if (rowData.length != this.configuration.getColumn()) {
-            String message = "Number of data in a row should be equal to number of columns.";
+            String message = "Number of data in a row should be equal to number of columns";
             throw new IllegalArgumentException(message);
         }
 
